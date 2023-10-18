@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
-// Assignment requirements are exceeded by implenting a way that the program only decides if Words are hidden for Words if they are already shown. 
-// Also when the user presses enter the program will continuesly loop through the hiding algorithim until atleast one word is hidden.
+// Assignment requirements are exceeded by implementing a way that the program only decides if Words are hidden for Words if they are already shown.
+// Also when the user presses enter the program will continuously loop through the hiding algorithm until at least one word is hidden.
 
 class Program
 {
