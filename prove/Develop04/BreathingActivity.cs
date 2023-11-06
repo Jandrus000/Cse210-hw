@@ -15,7 +15,7 @@ public class BreathingActivity : Activity
 
         _breathingLoop();
 
-        EndingMessage($"\nYou have completed another {_time} seconds of the Breathing Activity\n");
+        EndingMessage($"\nYou have completed another {_time} seconds of the Breathing Activity");
 
     }
 
