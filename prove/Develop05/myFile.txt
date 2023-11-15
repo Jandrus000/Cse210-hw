@@ -1,0 +1,5 @@
+650
+SimpleGoal:No sugar for a month,I need to eat less sugar,200,True
+EternalGoal:Read Scriptures,Read at least 30 minutes every day,50,0
+CheckListGoal:Excercise,Complete todays workout,25,True,100,6,6
+SimpleGoal:Climb a mountain,I want to climb R mountain on saturday,100,True
