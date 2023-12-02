@@ -11,6 +11,8 @@ public class Game{
 
     public Game()
     {
+        System.Console.WriteLine();
+        System.Console.WriteLine("Player List:");
         LoadPlayers();
         DisplayPlayers();
         System.Console.WriteLine();
