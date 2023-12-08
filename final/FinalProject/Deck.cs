@@ -16,13 +16,16 @@ public class Deck
         new Card("♣","J"),new Card("♥","J"),new Card("♦","J"),new Card("♠","Q"),new Card("♣","Q"),new Card("♥","Q"),new Card("♦","Q"),
         new Card("♠","K"),new Card("♣","K"),new Card("♥","K"),new Card("♦","K")};
     }
+    public Deck(List<Card> deck){
+        _cards=deck;
+    }
 
     public void Shuffle()
     {
-        Random random = new Random();
-
         List<Card> cardsToBeShuffled = _cards;
+        Random random = new Random();
         List<Card> newDeck = new List<Card>(); 
+        
         while(cardsToBeShuffled.Count>0)
         {
             int removedCard = random.Next(0,cardsToBeShuffled.Count);
@@ -41,5 +44,21 @@ public class Deck
     public void SetCards(List<Card> cards)
     {
         _cards = cards;
+    }
+    public void AddNew(Card newCard)
+    {
+        _cards.Add(newCard);
+    }
+    public int Count()
+    {
+        return _cards.Count();
+    }
+    public void RemoveCardAt(int i)
+    {
+        _cards.RemoveAt(i);
+    }
+    public void Clear()
+    {
+        _cards.Clear();
     }
 }

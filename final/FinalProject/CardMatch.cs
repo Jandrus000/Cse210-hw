@@ -5,13 +5,10 @@ public class CardMatch: Game
 {
 
     //get rid of matched cards
-    List<Card> _matchedCards = new List<Card>();
+    private Deck _matchedCards = new Deck(new List<Card>());
 
     public CardMatch()
     {
-        Deck newDeck = new Deck();
-        newDeck.Shuffle();
-        _player1Cards = newDeck.GetCards();
         System.Console.WriteLine("                                                                                                            ,---,");         
         System.Console.WriteLine("                                                                                                          ,`--.' |");            
         System.Console.WriteLine("                                                          ____                ___                ,---,    |   :  :");            
@@ -28,65 +25,51 @@ public class CardMatch: Game
         System.Console.WriteLine(" \\   \\  / |  ,     .-./       \\   \\  /          '---'         |  ,     .-./  ---`-'   \\   \\  / `--''      `-- -`, ;");           
         System.Console.WriteLine("  `----'   `--`---'            `----'                          `--`---'                `----'               '---`\" ");           
         System.Console.WriteLine();
-        System.Threading.Thread.Sleep(1000); 
-        System.Console.WriteLine("Ready");    
-        System.Threading.Thread.Sleep(1000); 
-        System.Console.WriteLine("Set");  
-        System.Threading.Thread.Sleep(1000); 
-        System.Console.WriteLine("Go!");    
-        System.Threading.Thread.Sleep(1000);                                                                                                                    
+
+        ReadySetGo();                                                                                                                    
 
                                                                                                                                 
     }
 
-    public void FlipCard()
-    {
-
-    }
-
-    public void IsMatch()
-    {
-
-    }
 
     public override void DisplayTurn()
     {
         System.Console.Clear();
-            int beg=0;
-            int end=13;
-            System.Console.WriteLine("       A          B          C          D          E          F          G          H          I          J          K          L          M     ");
-            for(int i=0;i<4;i++)
+        int beg=0;
+        int end=13;
+        System.Console.WriteLine("       A          B          C          D          E          F          G          H          I          J          K          L          M     ");
+        for(int i=0;i<4;i++)
+        {
+            for (int l=0; l<9 ; l++)
             {
-                for (int l=0; l<9 ; l++)
+                for (int c=beg; c<end;c++)
                 {
-                    for (int c=beg; c<end;c++)
+                    if(c==0 || c%13 == 0)
                     {
-                        if(c==0 || c%13 == 0)
+                        if(l == 4)
                         {
-                            if(l == 4)
-                            {
-                                System.Console.Write($"{i+1} ");
-                            }
-                            else
-                            {
-                                System.Console.Write("  ");
-                            }
+                            System.Console.Write($"{i+1} ");
                         }
-                        if(_player1Cards[c].GetRevealed())
-                        {   
-                            System.Console.Write(_player1Cards[c].GetDisplay()[l]);
+                        else
+                        {
+                            System.Console.Write("  ");
                         }
-                        else{
-                            System.Console.Write(_player1Cards[c].GetBackDisplay()[l]);
-                        }
-                        
                     }
-                    System.Console.WriteLine();
+                    if(_player1Cards.GetCards()[c].GetRevealed())
+                    {   
+                        System.Console.Write(_player1Cards.GetCards()[c].GetDisplay()[l]);
+                    }
+                    else{
+                        System.Console.Write(_player1Cards.GetCards()[c].GetBackDisplay()[l]);
+                    }
                     
                 }
-                beg+=13;
-                end+=13;
+                System.Console.WriteLine();
+                
             }
+            beg+=13;
+            end+=13;
+        }
         
         
     }
@@ -174,56 +157,51 @@ public class CardMatch: Game
         }
         return cardChoiceIndex;
     }
+    
+    public int GetCardToReveal(int cardChoice, string message)
+    {
+        while(true)
+        {
+            System.Console.Write(message);
+            cardChoice = CardChoice();
+            if(!_player1Cards.GetCards()[cardChoice].GetRevealed())
+            {
+                _player1Cards.GetCards()[cardChoice].SetRevealed(true);
+                DisplayTurn();
+                break;
+            }else{
+                System.Console.WriteLine("Invalid card, try again");
+            }
+        }
+        return cardChoice;
+    }
     public virtual void NextTurn()
     {
+        
         int cardChoice1 = -1;
         int cardChoice2 = -1;
-        while(true)
-        {
-            System.Console.Write("\nEnter card to reveal (for example A1): ");
-            cardChoice1 = CardChoice();
-            if(!_player1Cards[cardChoice1].GetRevealed())
-            {
-                _player1Cards[cardChoice1].SetRevealed(true);
-                DisplayTurn();
-                break;
-            }else{
-                System.Console.WriteLine("Invalid card, try again");
-            }
-        }
-
-        while(true)
-        {
-            System.Console.Write("\nEnter card to compare (for example A1): ");
-            cardChoice2 = CardChoice();
-            if(!_player1Cards[cardChoice2].GetRevealed())
-            {
-                _player1Cards[cardChoice2].SetRevealed(true);
-                DisplayTurn();
-                break;
-            }else{
-                System.Console.WriteLine("Invalid card, try again");
-            }
-        }
-        
-        if(_player1Cards[cardChoice1].GetFace() == _player1Cards[cardChoice2].GetFace())
+        cardChoice1 = GetCardToReveal(cardChoice1, "\nEnter card to reveal (for example A1): ");
+        cardChoice2 = GetCardToReveal(cardChoice2, "\nEnter card to compare (for example A1): ");
+        var cardsToChange = _player1Cards.GetCards();
+        if(_player1Cards.GetCards()[cardChoice1].GetFace() == _player1Cards.GetCards()[cardChoice2].GetFace())
         {
             System.Console.WriteLine("\nYou got a match!");
-            _player1Cards[cardChoice1].ChangeToEmpty();
-            _player1Cards[cardChoice2].ChangeToEmpty();
+            cardsToChange[cardChoice1].ChangeToEmpty();
+            cardsToChange[cardChoice2].ChangeToEmpty();
             System.Threading.Thread.Sleep(1500);
         }else{
             System.Console.Write("\nYou did not get a match, press enter to continue");
             System.Console.ReadLine();
-            _player1Cards[cardChoice1].SetRevealed(false);
-            _player1Cards[cardChoice2].SetRevealed(false);
+            cardsToChange[cardChoice1].SetRevealed(false);
+            cardsToChange[cardChoice2].SetRevealed(false);
         }
+        _player1Cards.SetCards(cardsToChange);
     }
 
     public override void GameOver()
     {
         bool over = true;
-        foreach(var card in _player1Cards)
+        foreach(var card in _player1Cards.GetCards())
         {
             if(!card.GetRevealed())
             {
@@ -231,8 +209,12 @@ public class CardMatch: Game
             }
         }
         
-        if(over)
+        if(over){
+            _players[_player1Index].IncrementWins();
+            System.Console.Clear();
+            System.Console.WriteLine($"\nCongrats {_players[_player1Index].GetName()}! You won!\nYou now have {_players[_player1Index].GetWins()} wins!");
             base.GameOver();
+        }
     }
 
 
